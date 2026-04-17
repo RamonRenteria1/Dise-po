@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg p-4">
+            <div class="card-body">
+                <h3 class="text-center fw-bold text-primary mb-4">Crear Cuenta</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Nombre Completo</label>
+                        <input type="text" name="nombre" class="form-control" placeholder="Ej. Juan Ruen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Correo Electrónico</label>
+                        <input type="email" name="email" class="form-control" placeholder="nombre@correo.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Contraseña</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">Confirmar Contraseña</label>
+                        <input type="password" name="confirmar_password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-round fw-bold py-2">Registrarme</button>
+                </form>
+                <p class="text-center mt-3 small">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

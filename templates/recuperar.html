@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-lg p-4">
+            <div class="card-body">
+                <h4 class="text-center fw-bold text-primary mb-4">Recuperar Acceso</h4>
+                <p class="text-muted small text-center mb-4">Ingresa tu correo y te mostraremos tu contraseña guardada en el diccionario.</p>
+                
+                <form method="POST">
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Correo Electrónico</label>
+                        <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-round fw-bold py-2">Consultar Clave</button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('login') }}" class="small text-decoration-none">← Volver al Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

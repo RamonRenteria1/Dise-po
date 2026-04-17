@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        
+        <div class="mb-5">
+            <h5 class="text-success fw-bold mb-3">Tareas Entregadas</h5>
+            <div class="list-group shadow-sm opacity-75">
+                <div class="list-group-item bg-light border-0 mb-2 rounded-3 p-4 text-center">
+                    <p class="text-muted mb-0 small italic">No hay tareas entregadas por el momento.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow border-0 mb-5 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary py-3">
+                <h5 class="card-title text-white mb-0 fw-bold text-center">Asignar Nueva Actividad</h5>
+            </div>
+            <div class="card-body p-4 bg-white">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Título de la actividad</label>
+                        <input type="text" class="form-control form-control-lg bg-light border-0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Instrucciones</label>
+                        <textarea class="form-control bg-light border-0" rows="3"></textarea>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Fecha Límite</label>
+                            <input type="date" class="form-control bg-light border-0">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Publicar Tarea</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h5 class="text-secondary fw-bold mb-3">Pendientes por Realizar</h5>
+            <div class="list-group shadow-sm">
+                <div class="list-group-item p-5 border-start border-5 border-primary rounded-3 mb-3 bg-white shadow-sm text-center">
+                    <p class="text-muted mb-0">No hay tareas pendientes en la lista.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
