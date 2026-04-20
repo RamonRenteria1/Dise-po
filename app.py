@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+import GestorTareas 
+
 
 app = Flask(__name__)
 app.secret_key = '3432432'
@@ -7,21 +9,15 @@ usuarios_registrados = {}
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        user = usuarios_registrados.get(email)
-
-        if user and user['password'] == password:
-            session['usuario_id'] = email
-            session['nombre'] = user['nombre']
-            flash(f'¡Bienvenido de nuevo, {user["nombre"]}!', 'success')
-            return redirect(url_for('tareas'))
-        else:
-            flash('Correo o contraseña incorrectos.', 'danger')
-            
-    return render_template('login.html')
+    gestor = GestorTareas()
+    if gestor:
+        if gestor.obtener_usuario2("Hola@gmail.com", "1234"):
+            return render_template('login.html')
+        else :
+            pass
+    else: 
+        return render_template('ErrorConceccion.html')
+    
 @app.route('/recuperar')
 def recuperar():
     

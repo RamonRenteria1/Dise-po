@@ -13,14 +13,15 @@
                         <label class="form-label small fw-bold">Correo Electrónico</label>
                         <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-round fw-bold py-2">Consultar Clave</button>
+                    <button type="submit" class="btn btn-primary w-100 btn-round fw-bold py-2">Enviar contraseña nueva</button>
                 </form>
                 
                 <div class="text-center mt-4">
-                    <a href="{{ url_for('login') }}" class="small text-decoration-none">← Volver al Login</a>
+                    <button type="submit" href="{{ url_for('login') }}"  class="btn btn-danger w-100 btn-round fw-bold py-2">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+href="{{ url_for('login') }}" 
