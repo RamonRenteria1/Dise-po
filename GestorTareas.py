@@ -28,12 +28,13 @@ class GestorTareas:
         self.tareas.create_index([("usuario_id", 1), ("fecha_creacion", -1)])
         self.tareas.create_index("estado")
     
-    def crear_usuario(self, nombre: str, email: str) -> Optional[str]:
-        """Crear un nuevo usuario"""
+    def crear_usuario(self, nombre: str, email: str, password: str) -> Optional[str]:
+        """Crear un nuevo usuario con contraseña"""
         try:
             resultado = self.usuarios.insert_one({
                 "nombre": nombre,
                 "email": email,
+                "password": password, 
                 "fecha_registro": datetime.now(),
                 "activo": True
             })
@@ -53,15 +54,19 @@ class GestorTareas:
             print(f"Error al obtener usuario: {e}")
             return None
         
-    def obtener_usuario2(self, email: str, pass1 : str) -> Optional[Dict]:
+    def obtener_usuario2(self, email: str, pass1: str) -> Optional[Dict]:
+        """Busca un usuario por email y valida su contraseña"""
         try:
-            correo: self.usuario.find._one({"email":ObjectId (email)})
-            if correo: 
-                #Verificar el password tecleado por el usuario con la base de datos 
-                #Regresar los datos del usuarip
-                #usuario['_id'] = str (usuario['_id'])
-                #simplificar funcion
-                return 
+            
+            usuario = self.usuarios.find_one({"email": email})
+            
+            if usuario:
+                
+                if usuario.get('password') == pass1:
+                    usuario['_id'] = str(usuario['_id'])
+                    return usuario
+            
+            return None 
         except Exception as e:
             print(f"Error al obtener usuario: {e}")
             return None
