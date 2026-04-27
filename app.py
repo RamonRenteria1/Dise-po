@@ -7,7 +7,6 @@ app = Flask(__name__)
 app.secret_key = 't123123dsfcvxz'
 
 gestor = GestorTareas()
-gestor.crear_usuario("Ramon", "reymon@gmail.com", "123456")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -23,14 +22,16 @@ def login():
         if usuario:
             
             session['usuario_id'] = usuario['_id']
-            session['nombre'] = usuario['nombre']
-            flash(f'Bienvenido {usuario["nombre"]}', 'success')
+            session['nombre'] = usuario['username']
+            flash(f'Bienvenido {usuario["username"]}', 'success')
             return redirect(url_for('tareas'))
+        
         else:
             
             flash('Correo o contraseña incorrectos.', 'danger')
             
     return render_template('login.html')
+
 @app.route('/recuperar')
 def recuperar():
     
@@ -39,27 +40,41 @@ def recuperar():
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
+        
+        nombre = request.form.get('nombre') 
         email = request.form.get('email')
         password = request.form.get('password')
         confirmar = request.form.get('confirmar_password')
 
+        
+        if not nombre or not email or not password:
+            flash("Todos los campos son obligatorios", "error")
+            return redirect(url_for("registro"))
+        
+        
         if password != confirmar:
-            flash('Las contraseñas no coinciden.', 'danger')
-            return render_template('registro.html')
-
-        if email in usuarios_registrados:
-            flash('Este correo ya está registrado.', 'danger')
-            return render_template('registro.html')
+            flash("Las contraseñas no coinciden", "error")
+            return redirect(url_for("registro"))
 
         
-        usuarios_registrados[email] = {
-            "nombre": nombre,
-            "password": password
+        nuevo_usuario = {
+            "username": nombre,
+            "email": email,
+            "password": password 
         }
         
-        flash('Registro exitoso. Ya puedes iniciar sesión.', 'success')
-        return redirect(url_for('login'))
+        if  gestor.usuarios.find_one({"email": email}):
+            flash("El Correo Ya Esta Registrado", "danger")
+            return redirect(url_for('registro'))
+        
+        try:
+            
+            gestor.usuarios.insert_one(nuevo_usuario)
+            flash('Registro exitoso. Ya puedes iniciar sesión.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f"Error al guardar en la base de datos: {e}", "error")
+            return redirect(url_for('registro'))
 
     return render_template('registro.html')
 
