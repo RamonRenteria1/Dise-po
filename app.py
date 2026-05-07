@@ -71,19 +71,19 @@ def tareas():
     u_id = session['usuario_id']
 
     if request.method == 'POST':
-
         titulo = request.form.get('titulo')
         descripcion = request.form.get('descripcion')
-        fecha_texto = request.form.get('fecha_limite')
+        fecha_t = request.form.get('fecha_limite')
         
-        fecha_objeto = None
-        if fecha_texto:
+        
+        fecha_o = None
+        if fecha_t:
             try:
-                fecha_objeto = datetime.strptime(fecha_texto, '%Y-%m-%d')
+                fecha_o = datetime.fromisoformat(fecha_t)
             except ValueError:
-                fecha_objeto = None
+                fecha_o = None
 
-        gestor.crear_tarea(u_id, titulo, descripcion, fecha_objeto)
+        gestor.crear_tarea(u_id, titulo, descripcion, fecha_o)
         
         flash('Tarea publicada correctamente')
         return redirect(url_for('tareas'))
@@ -112,9 +112,7 @@ def eliminar_tarea(tarea_id):
 @app.route('/cancelar_tarea/<tarea_id>', methods=['POST'])
 def cancelar_tarea(tarea_id):
     if 'usuario_id' in session:
-        
         motivo = request.form.get('motivo_cancelacion')
-        
         gestor.cancelar_tarea_con_motivo(tarea_id, motivo)
         flash('Tarea cancelada')
     return redirect(url_for('tareas'))

@@ -51,13 +51,13 @@
 
                         <div class="mb-2 d-flex flex-wrap gap-2">
                             <small class="badge bg-light text-dark border fw-normal">
-                                📅 Registro: {{ tarea.fecha_creacion.strftime('%d/%m/%Y') if tarea.fecha_creacion else
+                                Registro: {{ tarea.fecha_creacion.strftime('%d/%m/%Y') if tarea.fecha_creacion else
                                 'S/F' }}
                             </small>
 
                             <small
                                 class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 fw-bold">
-                                ⏰ Entrega: {{ tarea.fecha_limite if tarea.fecha_limite is string else
+                                Entrega: {{ tarea.fecha_limite if tarea.fecha_limite is string else
                                 (tarea.fecha_limite.strftime('%d/%m/%Y') if tarea.fecha_limite else 'Sin límite') }}
                             </small>
                         </div>
