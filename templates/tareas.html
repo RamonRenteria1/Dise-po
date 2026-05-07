@@ -1,54 +1,106 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-9">
-        
-        <div class="mb-5">
-            <h5 class="text-success fw-bold mb-3">Tareas Entregadas</h5>
-            <div class="list-group shadow-sm opacity-75">
-                <div class="list-group-item bg-light border-0 mb-2 rounded-3 p-4 text-center">
-                    <p class="text-muted mb-0 small italic">No hay tareas entregadas por el momento.</p>
-                </div>
-            </div>
-        </div>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10">
 
         <div class="card shadow border-0 mb-5 rounded-4 overflow-hidden">
-            <div class="card-header bg-primary py-3">
+            <div class="card-header bg-dark py-3 border-bottom border-info border-3">
                 <h5 class="card-title text-white mb-0 fw-bold text-center">Asignar Nueva Actividad</h5>
             </div>
             <div class="card-body p-4 bg-white">
-                <form>
+                <form method="POST" action="{{ url_for('tareas') }}">
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Título de la actividad</label>
-                        <input type="text" class="form-control form-control-lg bg-light border-0">
+                        <input type="text" name="titulo" class="form-control bg-light border-0 shadow-sm"
+                            placeholder="Ej. Tarea de Programación" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Instrucciones</label>
-                        <textarea class="form-control bg-light border-0" rows="3"></textarea>
+                        <textarea name="descripcion" class="form-control bg-light border-0 shadow-sm"
+                            rows="2"></textarea>
                     </div>
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Fecha Límite</label>
-                            <input type="date" class="form-control bg-light border-0">
+                            <label class="form-label small fw-bold text-muted">Fecha Límite (Entrega)</label>
+                            <input type="date" name="fecha_limite" class="form-control bg-light border-0 shadow-sm"
+                                required>
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="button" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Publicar Tarea</button>
+                        <button type="submit"
+                            class="btn btn-dark rounded-pill px-5 fw-bold shadow-sm border-info">Publicar Tarea</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="mb-4">
-            <h5 class="text-secondary fw-bold mb-3">Pendientes por Realizar</h5>
-            <div class="list-group shadow-sm">
-                <div class="list-group-item p-5 border-start border-5 border-primary rounded-3 mb-3 bg-white shadow-sm text-center">
-                    <p class="text-muted mb-0">No hay tareas pendientes en la lista.</p>
+        <div class="list-group shadow-sm">
+            <h5 class="text-info fw-bold mb-3 px-2">Mis Actividades</h5>
+            {% for tarea in pendientes + en_progreso + entregadas + canceladas %}
+            <div
+                class="list-group-item p-4 border-start border-5 {% if tarea.estado == 'cancelada' %}border-secondary{% elif tarea.estado == 'en_progreso' %}border-warning{% elif tarea.estado == 'completada' %}border-success{% else %}border-info{% endif %} rounded-3 mb-3 bg-white shadow-sm">
+
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6
+                            class="fw-bold mb-1 {% if tarea.estado == 'cancelada' or tarea.estado == 'completada' %}text-muted text-decoration-line-through{% endif %}">
+                            {{ tarea.titulo }}
+                        </h6>
+                        <p class="text-muted small mb-2">{{ tarea.descripcion }}</p>
+
+                        <div class="mb-2 d-flex flex-wrap gap-2">
+                            <small class="badge bg-light text-dark border fw-normal">
+                                📅 Registro: {{ tarea.fecha_creacion.strftime('%d/%m/%Y') if tarea.fecha_creacion else
+                                'S/F' }}
+                            </small>
+
+                            <small
+                                class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 fw-bold">
+                                ⏰ Entrega: {{ tarea.fecha_limite if tarea.fecha_limite is string else
+                                (tarea.fecha_limite.strftime('%d/%m/%Y') if tarea.fecha_limite else 'Sin límite') }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <span
+                        class="badge {% if tarea.estado == 'en_progreso' %}bg-warning{% elif tarea.estado == 'completada' %}bg-success{% elif tarea.estado == 'cancelada' %}bg-danger{% else %}bg-info{% endif %}">
+                        {{ tarea.estado | capitalize }}
+                    </span>
+                </div>
+
+                <div class="d-flex gap-2 mt-3 align-items-center">
+                    {% if tarea.estado != 'cancelada' and tarea.estado != 'completada' %}
+                    <a href="{{ url_for('actualizar_estado', tarea_id=tarea._id, nuevo_estado='en_progreso' if tarea.estado == 'pendiente' else 'completada') }}"
+                        class="btn btn-sm btn-success fw-bold">
+                        {{ 'Empezar' if tarea.estado == 'pendiente' else 'Entregar' }}
+                    </a>
+
+                    <form method="POST" action="{{ url_for('cancelar_tarea', tarea_id=tarea._id) }}"
+                        class="d-flex gap-1 mb-0">
+                        <input type="text" name="motivo_cancelacion" class="form-control form-control-sm"
+                            placeholder="Motivo" required style="width: 150px;">
+                        <button type="submit" class="btn btn-sm btn-secondary">Cancelar</button>
+                    </form>
+                    {% elif tarea.estado == 'cancelada' %}
+                    <div class="alert alert-secondary py-1 px-3 mb-0 small border-0">
+                        <strong class="text-danger">Motivo:</strong> {{ tarea.motivo if tarea.motivo else 'Cancelada' }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{{ url_for('eliminar_tarea', tarea_id=tarea._id) }}"
+                        class="btn btn-sm btn-outline-danger border-0 ms-auto">
+                        Eliminar
+
+                        <a href="{{ url_for('editar_tarea', tarea_id=tarea._id) }}"
+                            class="btn btn-sm btn-outline-primary border-0">
+                            Editar
+                        </a>
+                    </a>
                 </div>
             </div>
+            {% endfor %}
         </div>
-
     </div>
 </div>
 {% endblock %}

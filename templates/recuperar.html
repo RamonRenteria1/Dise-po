@@ -3,25 +3,28 @@
 {% block content %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-4">
-        <div class="card shadow-lg p-4">
+        <div class="card shadow-lg p-4 border-0 border-top border-info border-4">
             <div class="card-body">
-                <h4 class="text-center fw-bold text-primary mb-4">Recuperar Acceso</h4>
-                <p class="text-muted small text-center mb-4">Ingresa tu correo y te mostraremos tu contraseña guardada en el diccionario.</p>
+                <h4 class="text-center fw-bold text-dark mb-4">Recuperar Acceso</h4>
+                <p class="text-muted small text-center mb-4">
+                    Ingresa tu correo y buscaremos tus credenciales en el sistema.
+                </p>
                 
                 <form method="POST">
                     <div class="mb-4">
-                        <label class="form-label small fw-bold">Correo Electrónico</label>
-                        <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                        <label class="form-label small fw-bold text-muted">Correo Electrónico</label>
+                        <input type="email" name="email" class="form-control border-secondary-subtle" placeholder="ejemplo@correo.com" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-round fw-bold py-2">Enviar contraseña nueva</button>
+                    <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 border-info">Enviar contraseña</button>
                 </form>
                 
-                <div class="text-center mt-4">
-                    <button type="submit" href="{{ url_for('login') }}"  class="btn btn-danger w-100 btn-round fw-bold py-2">Cancelar</button>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary w-100 rounded-pill fw-bold py-2 border-0">
+                        Cancelar y volver
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-href="{{ url_for('login') }}" 

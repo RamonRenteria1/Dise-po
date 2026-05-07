@@ -134,6 +134,13 @@ class GestorTareas:
         )
         return resultado.modified_count > 0
     
+    def cancelar_tarea_con_motivo(self, tarea_id, motivo):
+        from bson.objectid import ObjectId
+        self.tareas.update_one(
+        {"_id": ObjectId(tarea_id)},
+        {"$set": {"estado": "cancelada", "motivo": motivo}}
+        )
+    
     def eliminar_tarea(self, tarea_id: str) -> bool:
         """Eliminar una tarea"""
         resultado = self.tareas.delete_one({"_id": ObjectId(tarea_id)})
@@ -185,6 +192,21 @@ class GestorTareas:
             resultado.append(t)
         return resultado
     
+    def obtener_tarea(self, tarea_id: str):
+        """Busca una tarea específica por su ID de texto"""
+        return self.tareas.find_one({"_id": ObjectId(tarea_id)})
+
+    def editar_tarea(self, tarea_id: str, titulo: str, descripcion: str):
+        """Actualiza el título y descripción de una tarea"""
+        self.tareas.update_one(
+            {"_id": ObjectId(tarea_id)},
+            {"$set": {
+                "titulo": titulo,
+                "descripcion": descripcion,
+                "fecha_edicion": datetime.now()
+            }}
+        ) 
+        
     def tareas_urgentes(self, horas: int = 24) -> List[Dict]:
         """Encontrar tareas que vencen en las próximas N horas"""
         ahora = datetime.now()
